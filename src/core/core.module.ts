@@ -7,6 +7,7 @@ import { getSequelizeConfig } from './configs/get-sequelize.config'
 import { AccountModule } from '../modules/auth/account/account.module'
 import { VerificationModule } from '../modules/auth/verification/verification.module'
 import { MailModule } from '../modules/libs/mail/mail.module'
+import { LocalesModule } from '../modules/libs/locales/locales.module'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MailModule } from '../modules/libs/mail/mail.module'
     RedisModule,
     VerificationModule,
     AccountModule,
+    LocalesModule,
   ],
 })
 export class CoreModule {}

@@ -31,6 +31,7 @@ export class VerificationService {
     const { token } = input
 
     const existingToken = await this.tokenModel.findOne({
+      include: [UserModel],
       where: {
         token,
         type: TokenType.EMAIL_VERIFY,
@@ -41,7 +42,11 @@ export class VerificationService {
 
     const hasExpired = new Date(existingToken.expiresIn) < new Date()
 
-    if (hasExpired) throw new BadRequestException('tokenHasExpired')
+    if (hasExpired) {
+      await this.sendVerificationToken(existingToken.user)
+
+      throw new BadRequestException('tokenHasExpired')
+    }
 
     await this.userModel.update(
       {

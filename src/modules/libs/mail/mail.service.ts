@@ -29,24 +29,15 @@ export class MailService {
     formData.append('to', email)
     formData.append('html', html)
 
-    return this.mailerService
-      .sendMail({
-        to: email,
-        subject,
-        html,
-      })
-      .catch(() => {
-        return this.httpService.axiosRef.post(
-          'https://api.smtp.bz/v1/smtp/send',
-          formData,
-          {
-            headers: {
-              Authorization:
-                this.configService.getOrThrow<string>('MAIL_TOKEN'),
-              'Content-Type': 'multipart/form-data',
-            },
-          },
-        )
-      })
+    return this.httpService.axiosRef.post(
+      'https://api.smtp.bz/v1/smtp/send',
+      formData,
+      {
+        headers: {
+          Authorization: this.configService.getOrThrow<string>('MAIL_TOKEN'),
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    )
   }
 }
