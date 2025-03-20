@@ -8,14 +8,14 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { User } from './user.model';
+import { UserModel } from './user.model';
 
 export enum NotificationType {
   ENABLE_TWO_FACTOR = 'ENABLE_TWO_FACTOR',
 }
 
 @Table({ tableName: 'notifications' })
-export class Notification extends Model<Notification> {
+export class NotificationModel extends Model<NotificationModel> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
@@ -31,12 +31,12 @@ export class Notification extends Model<Notification> {
   @Column({ field: 'is_read' })
   isRead: boolean;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserModel)
   @Column({ field: 'user_id', type: DataType.UUID, allowNull: true })
   userId: string;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => UserModel)
+  user: UserModel;
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })

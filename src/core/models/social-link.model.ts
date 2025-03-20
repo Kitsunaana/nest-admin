@@ -8,10 +8,10 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { User } from './user.model';
+import { UserModel } from './user.model';
 
 @Table({ tableName: 'social_links' })
-export class SocialLink extends Model<SocialLink> {
+export class SocialLinkModel extends Model<SocialLinkModel> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
@@ -26,12 +26,12 @@ export class SocialLink extends Model<SocialLink> {
   @Column
   position: number;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserModel)
   @Column({ field: 'user_id', type: DataType.UUID, allowNull: true })
   userId: string;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => UserModel)
+  user: UserModel;
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })

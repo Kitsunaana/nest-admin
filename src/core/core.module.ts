@@ -4,6 +4,7 @@ import {IS_DEV_ENV} from "../shared/utils";
 import {RedisModule} from "./redis/redis.module";
 import {SequelizeModule} from "@nestjs/sequelize";
 import {getSequelizeConfig} from "./configs/get-sequelize.config";
+import {AccountModule} from "../modules/auth/account/account.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import {getSequelizeConfig} from "./configs/get-sequelize.config";
       useFactory: getSequelizeConfig,
     }),
     RedisModule,
+    AccountModule,
   ],
 })
 export class CoreModule {}

@@ -8,10 +8,10 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { User } from './user.model';
+import { UserModel } from './user.model';
 
 @Table({ tableName: 'notification_settings' })
-export class NotificationSettings extends Model<NotificationSettings> {
+export class NotificationSettingsModel extends Model<NotificationSettingsModel> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
@@ -25,12 +25,12 @@ export class NotificationSettings extends Model<NotificationSettings> {
   @Column({ field: 'telegram_notifications' })
   telegramNotifications: boolean;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserModel)
   @Column({ field: 'user_id', type: DataType.UUID })
   userId: string;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => UserModel)
+  user: UserModel;
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })

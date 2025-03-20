@@ -12,13 +12,13 @@ import {
   AllowNull,
   Unique,
 } from 'sequelize-typescript';
-import { Token } from './token.model';
-import { SocialLink } from './social-link.model';
-import { Notification } from './notification.model';
-import { NotificationSettings } from './notification-settings.model';
+import { TokenModel } from './token.model';
+import { SocialLinkModel } from './social-link.model';
+import { NotificationModel } from './notification.model';
+import { NotificationSettingsModel } from './notification-settings.model';
 
 @Table({ tableName: 'users' })
-export class User extends Model<User> {
+export class UserModel extends Model<UserModel> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
@@ -67,17 +67,17 @@ export class User extends Model<User> {
   @Column({ field: 'deactivated_at', type: DataType.DATE, allowNull: true })
   deactivatedAt: Date;
 
-  @HasMany(() => Token)
-  tokens: Token[];
+  @HasMany(() => TokenModel)
+  tokens: TokenModel[];
 
-  @HasMany(() => SocialLink)
-  socialLinks: SocialLink[];
+  @HasMany(() => SocialLinkModel)
+  socialLinks: SocialLinkModel[];
 
-  @HasMany(() => Notification)
-  notifications: Notification[];
+  @HasMany(() => NotificationModel)
+  notifications: NotificationModel[];
 
-  @HasOne(() => NotificationSettings)
-  notificationSettings: NotificationSettings;
+  @HasOne(() => NotificationSettingsModel)
+  notificationSettings: NotificationSettingsModel;
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })
