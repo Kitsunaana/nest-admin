@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common'
-import {ConfigModule, ConfigService} from '@nestjs/config'
-import {IS_DEV_ENV} from "../shared/utils";
-import {RedisModule} from "./redis/redis.module";
-import {SequelizeModule} from "@nestjs/sequelize";
-import {getSequelizeConfig} from "./configs/get-sequelize.config";
-import {AccountModule} from "../modules/auth/account/account.module";
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { IS_DEV_ENV } from '../shared/utils'
+import { RedisModule } from './redis/redis.module'
+import { SequelizeModule } from '@nestjs/sequelize'
+import { getSequelizeConfig } from './configs/get-sequelize.config'
+import { AccountModule } from '../modules/auth/account/account.module'
+import { VerificationModule } from '../modules/auth/verification/verification.module'
+import { MailModule } from '../modules/libs/mail/mail.module'
 
 @Module({
   imports: [
@@ -17,7 +19,9 @@ import {AccountModule} from "../modules/auth/account/account.module";
       inject: [ConfigService],
       useFactory: getSequelizeConfig,
     }),
+    MailModule,
     RedisModule,
+    VerificationModule,
     AccountModule,
   ],
 })

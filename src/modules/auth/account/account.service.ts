@@ -3,11 +3,13 @@ import { hash } from 'argon2'
 import { UserModel } from '../../../core/models'
 import { CreateUserInput } from './input/create-user.input'
 import { InjectModel } from '@nestjs/sequelize'
+import { VerificationService } from '../verification/verification.service'
 
 @Injectable()
 export class AccountService {
   public constructor(
     @InjectModel(UserModel) private readonly userModel: typeof UserModel,
+    private readonly verificationService: VerificationService,
   ) {}
 
   public async me(id: string) {
@@ -27,8 +29,7 @@ export class AccountService {
       },
     })
 
-    if (isUsernameExists)
-      throw new ConflictException('Это имя пользователя уже занято')
+    if (isUsernameExists) throw new ConflictException('usernameExists')
 
     const isEmailExists = await this.userModel.findOne({
       where: {
@@ -36,7 +37,7 @@ export class AccountService {
       },
     })
 
-    if (isEmailExists) throw new ConflictException('Это имя почты уже занято')
+    if (isEmailExists) throw new ConflictException('emailExists')
 
     const user = await this.userModel.create({
       email,
@@ -44,6 +45,8 @@ export class AccountService {
       displayName: username,
       password: await hash(password),
     })
+
+    await this.verificationService.sendVerificationToken(user)
 
     return true
   }

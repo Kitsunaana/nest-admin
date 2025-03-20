@@ -6,9 +6,10 @@ import {
   Default,
   DataType,
   ForeignKey,
-  BelongsTo, Unique,
-} from 'sequelize-typescript';
-import { UserModel } from './user.model';
+  BelongsTo,
+  Unique,
+} from 'sequelize-typescript'
+import { UserModel } from './user.model'
 
 export enum TokenType {
   EMAIL_VERIFY = 'EMAIL_VERIFY',
@@ -19,32 +20,30 @@ export enum TokenType {
 
 @Table({ tableName: 'tokens' })
 export class TokenModel extends Model<TokenModel> {
-  @PrimaryKey
-  @Default(DataType.UUIDV4)
-  @Column(DataType.UUID)
-  id: string;
+  @Column({ type: DataType.UUID, primaryKey: true })
+  id: string
 
   @Column({ unique: true })
-  token: string;
+  token: string
 
   @Column(DataType.ENUM(...Object.values(TokenType)))
-  type: TokenType;
+  type: TokenType
 
   @Column({ field: 'expires_in', type: DataType.DATE })
-  expiresIn: Date;
+  expiresIn: Date
 
   @ForeignKey(() => UserModel)
   @Column({ field: 'user_id', type: DataType.UUID })
-  userId: string;
+  userId: string
 
   @BelongsTo(() => UserModel)
-  user: UserModel;
+  user: UserModel
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })
-  createdAt: Date;
+  createdAt: Date
 
   @Default(DataType.NOW)
   @Column({ field: 'updated_at', type: DataType.DATE })
-  updatedAt: Date;
+  updatedAt: Date
 }
