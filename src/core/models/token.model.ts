@@ -2,12 +2,10 @@ import {
   Table,
   Column,
   Model,
-  PrimaryKey,
   Default,
   DataType,
   ForeignKey,
   BelongsTo,
-  Unique,
 } from 'sequelize-typescript'
 import { UserModel } from './user.model'
 
@@ -16,6 +14,7 @@ export enum TokenType {
   PASSWORD_RESET = 'PASSWORD_RESET',
   DEACTIVATE_ACCOUNT = 'DEACTIVATE_ACCOUNT',
   TELEGRAM_AUTH = 'TELEGRAM_AUTH',
+  REFRESH_TOKEN = 'REFRESH_TOKEN',
 }
 
 @Table({ tableName: 'tokens' })

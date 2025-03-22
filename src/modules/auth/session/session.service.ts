@@ -11,7 +11,7 @@ import { VerificationService } from '../verification/verification.service'
 import { Request } from 'express'
 import { LoginInput } from './input/login-input'
 import { InjectModel } from '@nestjs/sequelize'
-import { UserModel } from '../../../core/models'
+import { TokenModel, UserModel } from '../../../core/models'
 import { Op } from 'sequelize'
 import { verify } from 'argon2'
 import {
@@ -19,11 +19,13 @@ import {
   getSessionMetadata,
   saveSession,
 } from '../../../shared/utils'
+import { createTokens } from '../../../shared/utils/create-tokens'
 
 @Injectable()
 export class SessionService {
   public constructor(
     @InjectModel(UserModel) private readonly userModel: typeof UserModel,
+    @InjectModel(TokenModel) private readonly tokenModel: typeof TokenModel,
 
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
@@ -106,7 +108,16 @@ export class SessionService {
 
     const metadata = getSessionMetadata(request, userAgent)
 
-    return saveSession(request, user, metadata)
+    const { refreshToken, accessToken } = await createTokens(
+      this.tokenModel,
+      user.id,
+    )
+
+    await saveSession(request, user, refreshToken, metadata)
+
+    return {
+      accessToken,
+    }
   }
 
   public async logout(request: Request) {

@@ -86,4 +86,4 @@ export class JWTHandler {
   }
 }
 
-export const jwt = new JWTHandler(process.env.JWT_SECRET || 'your-secret-key')
+export const jwt = new JWTHandler('your-secret-key')

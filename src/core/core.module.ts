@@ -8,6 +8,7 @@ import { AccountModule } from '../modules/auth/account/account.module'
 import { VerificationModule } from '../modules/auth/verification/verification.module'
 import { MailModule } from '../modules/libs/mail/mail.module'
 import { LocalesModule } from '../modules/libs/locales/locales.module'
+import { SessionModule } from '../modules/auth/session/session.module'
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { LocalesModule } from '../modules/libs/locales/locales.module'
     VerificationModule,
     AccountModule,
     LocalesModule,
+    SessionModule,
   ],
 })
 export class CoreModule {}

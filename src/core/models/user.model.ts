@@ -7,83 +7,79 @@ import {
   DataType,
   HasMany,
   HasOne,
-  BelongsTo,
-  ForeignKey,
-  AllowNull,
-  Unique,
-} from 'sequelize-typescript';
-import { TokenModel } from './token.model';
-import { SocialLinkModel } from './social-link.model';
-import { NotificationModel } from './notification.model';
-import { NotificationSettingsModel } from './notification-settings.model';
+} from 'sequelize-typescript'
+import { TokenModel } from './token.model'
+import { SocialLinkModel } from './social-link.model'
+import { NotificationModel } from './notification.model'
+import { NotificationSettingsModel } from './notification-settings.model'
 
 @Table({ tableName: 'users' })
 export class UserModel extends Model<UserModel> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
-  id: string;
+  id: string
 
   @Column({ unique: true })
-  email: string;
+  email: string
 
   @Column
-  password: string;
+  password: string
 
   @Column({ field: 'telegram_id', allowNull: true, unique: true })
-  telegramId: string;
+  telegramId: string
 
   @Column({ unique: true })
-  username: string;
+  username: string
 
   @Column({ field: 'display_name' })
-  displayName: string;
+  displayName: string
 
   @Column({ allowNull: true })
-  avatar: string;
+  avatar: string
 
   @Column({ allowNull: true })
-  bio: string;
+  bio: string
 
   @Default(false)
   @Column({ field: 'is_verified' })
-  isVerified: boolean;
+  isVerified: boolean
 
   @Default(false)
   @Column({ field: 'is_email_verified' })
-  isEmailVerified: boolean;
+  isEmailVerified: boolean
 
   @Default(false)
   @Column({ field: 'is_totp_enabled' })
-  isTotpEnabled: boolean;
+  isTotpEnabled: boolean
 
   @Column({ field: 'totp_secret', allowNull: true })
-  totpSecret: string;
+  totpSecret: string
 
   @Default(false)
   @Column({ field: 'is_deactivated' })
-  isDeactivated: boolean;
+  isDeactivated: boolean
 
   @Column({ field: 'deactivated_at', type: DataType.DATE, allowNull: true })
-  deactivatedAt: Date;
+  deactivatedAt: Date
 
   @HasMany(() => TokenModel)
-  tokens: TokenModel[];
+  tokens: TokenModel[]
 
   @HasMany(() => SocialLinkModel)
-  socialLinks: SocialLinkModel[];
+  socialLinks: SocialLinkModel[]
 
   @HasMany(() => NotificationModel)
-  notifications: NotificationModel[];
+  notifications: NotificationModel[]
 
   @HasOne(() => NotificationSettingsModel)
-  notificationSettings: NotificationSettingsModel;
+  notificationSettings: NotificationSettingsModel
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })
-  createdAt: Date;
+  createdAt: Date
 
   @Default(DataType.NOW)
   @Column({ field: 'updated_at', type: DataType.DATE })
-  updatedAt: Date;
+  updatedAt: Date
 }

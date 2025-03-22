@@ -5,17 +5,17 @@ import { Request } from 'express'
 import { LoginInput } from './input/login-input'
 
 @Controller('session')
-export class SessionResolver {
+export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
 
   @Authorization()
-  @Get()
+  @Get('/find-by-user')
   public async findByUser(@Req() request: Request) {
     return this.sessionService.findByUser(request)
   }
 
   @Authorization()
-  @Get()
+  @Get('find-current')
   public async findCurrent(@Req() request: Request) {
     return this.sessionService.findCurrent(request)
   }
