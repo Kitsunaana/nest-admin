@@ -6,6 +6,7 @@ import DeviceDetector = require('device-detector-js')
 import { SessionMetadata } from '../types'
 import { IS_DEV_ENV } from './is-dev.util'
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'))
 
 export const getSessionMetadata = (

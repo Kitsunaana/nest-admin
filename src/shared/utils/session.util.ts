@@ -14,6 +14,8 @@ export const saveSession = (
     request.session.userId = user.id
     request.session.metadata = metadata
 
+    request.session.refreshToken = 'test'
+
     request.session.save((error) => {
       if (error) {
         return reject(new InternalServerErrorException('failedSaveSession'))

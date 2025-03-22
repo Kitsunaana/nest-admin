@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import { MailService } from '../../libs/mail/mail.service'
 import { VerificationInput } from './inputs/verification.input'
 import { InjectModel } from '@nestjs/sequelize'
