@@ -7,5 +7,6 @@ declare module 'express-session' {
     createdAt?: Date | string
     metadata: SessionMetadata
     refreshToken: string
+    test: string
   }
 }

@@ -3,13 +3,15 @@ import { TokenModel, type TokenType, UserModel } from '../../core/models'
 
 export const generateToken = async ({
   tokenModel,
-  user,
+  userId,
   type,
+  timeOfLife = 300_000,
   isUUID = true,
 }: {
   tokenModel: typeof TokenModel
-  user: UserModel
+  userId: string
   type: TokenType
+  timeOfLife?: number
   isUUID?: boolean
 }) => {
   let token: string = ''
@@ -20,11 +22,11 @@ export const generateToken = async ({
     token = Math.floor(Math.random() * (1000000 - 100000) + 100000).toString()
   }
 
-  const expiresIn = new Date(new Date().getTime() + 300000)
+  const expiresIn = new Date(new Date().getTime() + timeOfLife)
 
   const existingToken = await tokenModel.findOne({
     where: {
-      userId: user.id,
+      userId,
       type,
     },
   })
@@ -39,7 +41,7 @@ export const generateToken = async ({
 
   const newToken = await tokenModel.create({
     id: uuid4(),
-    userId: user.id,
+    userId,
     expiresIn,
     token,
     type,

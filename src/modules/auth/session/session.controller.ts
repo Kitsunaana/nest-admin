@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
 import { SessionService } from './session.service'
 import { Authorization, UserAgent } from '../../../shared/decorators'
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import { LoginInput } from './input/login-input'
 
 @Controller('session')
@@ -22,11 +22,20 @@ export class SessionController {
 
   @Post('/login')
   public async login(
+    @Res() response: Response,
     @Req() request: Request,
     @Body() input: LoginInput,
     @UserAgent() userAgent: string,
   ) {
-    return this.sessionService.login(request, input, userAgent)
+    return this.sessionService.login(request, response, input, userAgent)
+  }
+
+  @Post('/refresh')
+  public async refreshToken(
+    @Req() request: Request,
+    @Res() response: Response,
+  ) {
+    return this.sessionService.refreshToken(request, response)
   }
 
   @Authorization()

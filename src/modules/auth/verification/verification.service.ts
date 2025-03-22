@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { Request, Response } from 'express'
+import { Request } from 'express'
 import { MailService } from '../../libs/mail/mail.service'
 import { VerificationInput } from './inputs/verification.input'
 import { InjectModel } from '@nestjs/sequelize'
@@ -74,7 +74,7 @@ export class VerificationService {
 
     const metadata = getSessionMetadata(request, userAgent)
 
-    return saveSession(request, user, '', metadata)
+    return saveSession(request, user, metadata)
   }
 
   public async sendVerificationToken(user: UserModel) {
@@ -82,7 +82,7 @@ export class VerificationService {
       tokenModel: this.tokenModel,
       type: TokenType.EMAIL_VERIFY,
       isUUID: true,
-      user: user,
+      userId: user.id,
     })
 
     await this.mailService.sendVerificationToken(

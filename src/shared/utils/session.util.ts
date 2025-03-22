@@ -7,15 +7,12 @@ import { SessionMetadata } from '../types'
 export const saveSession = (
   request: Request,
   user: UserModel,
-  refreshToken: string,
   metadata: SessionMetadata,
 ) => {
   return new Promise<UserModel>((resolve, reject) => {
     request.session.createdAt = new Date()
     request.session.userId = user.id
     request.session.metadata = metadata
-
-    request.session.refreshToken = refreshToken
 
     request.session.save((error) => {
       if (error) {

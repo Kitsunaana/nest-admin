@@ -8,10 +8,10 @@ import {
 import { RedisService } from '../../../core/redis/redis.service'
 import { ConfigService } from '@nestjs/config'
 import { VerificationService } from '../verification/verification.service'
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import { LoginInput } from './input/login-input'
 import { InjectModel } from '@nestjs/sequelize'
-import { TokenModel, UserModel } from '../../../core/models'
+import { TokenModel, TokenType, UserModel } from '../../../core/models'
 import { Op } from 'sequelize'
 import { verify } from 'argon2'
 import {
@@ -19,7 +19,10 @@ import {
   getSessionMetadata,
   saveSession,
 } from '../../../shared/utils'
-import { createTokens } from '../../../shared/utils/create-tokens'
+import {
+  createTokens,
+  REFRESH_TOKEN_EXPIRY,
+} from '../../../shared/utils/create-tokens'
 
 @Injectable()
 export class SessionService {
@@ -76,19 +79,17 @@ export class SessionService {
     }
   }
 
-  public async login(request: Request, input: LoginInput, userAgent: string) {
+  public async login(
+    request: Request,
+    response: Response,
+    input: LoginInput,
+    userAgent: string,
+  ) {
     const { login, password } = input
 
     const user = await this.userModel.findOne({
       where: {
-        [Op.or]: [
-          {
-            username: login,
-          },
-          {
-            email: login,
-          },
-        ],
+        [Op.or]: [{ username: login }, { email: login }],
       },
     })
 
@@ -113,11 +114,47 @@ export class SessionService {
       user.id,
     )
 
-    await saveSession(request, user, refreshToken, metadata)
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+      expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
+    })
 
-    return {
+    await saveSession(request, user, metadata)
+
+    response.json({
       accessToken,
-    }
+    })
+  }
+
+  public async refreshToken(request: Request, response: Response) {
+    const { refreshToken } = request.cookies
+
+    if (!refreshToken) throw new UnauthorizedException('refreshTokenInvalid')
+
+    const storedToken = await this.tokenModel.findOne({
+      where: {
+        type: TokenType.REFRESH_TOKEN,
+        token: refreshToken,
+      },
+    })
+
+    const createdTokens = await createTokens(
+      this.tokenModel,
+      storedToken.userId,
+    )
+
+    response.cookie('refreshToken', createdTokens.refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+      expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
+    })
+
+    response.json({
+      accessToken: createdTokens.accessToken,
+    })
   }
 
   public async logout(request: Request) {
