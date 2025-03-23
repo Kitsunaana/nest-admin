@@ -7,6 +7,8 @@ export const translate = {
       settings: 'Настройки',
       collapseRoutes: 'Свернуть',
       expandRoutes: 'Развернуть',
+      account: 'Профиль',
+      logout: 'Выход',
     },
     settings: {
       changeLanguage: 'Выбирете язык',
@@ -29,6 +31,7 @@ export const translate = {
       },
       forms: {
         validate: {
+          invalidUUID: 'Не валидный UUID токен',
           required: 'Поле обязательно для заполнения',
           minLength: 'Минимальное количество символов {{value}}',
           requiredSelect: 'Значение должно быть выбрано',
@@ -130,6 +133,30 @@ export const translate = {
           'Если вы не получали письмо на почту или время жизни токена истекло, то вы можете отправить письмо повтороно на указанную почту, поиск почты будет осуществляться по имени пользователя или почте',
         button: 'Отправить письмо повторно',
         toLoginButton: 'Перейти на страницу входа',
+      },
+    },
+    resetPassword: {
+      title: 'Сброс пароля',
+      description:
+        'Введите электронную почту для того, чтобы отправить письмо с ссылкой для установки нового пароля',
+      form: {
+        login: 'Электронная почта',
+        button: 'Сбросить пароль',
+      },
+      notify: {
+        emailSendSuccess: 'Почта успешно отправлена, провертье уведомления',
+        userNotFound: 'Пользователь с такой почтой не найден',
+      },
+    },
+    newPassword: {
+      form: {
+        title: 'Новый пароль',
+        password: 'Пароль',
+        repeatPassword: 'Повторите пароль',
+        submitText: 'Сохранить новый пароль',
+      },
+      notify: {
+        tokenHasExpired: 'Время жизни токена истекло',
       },
     },
   },
