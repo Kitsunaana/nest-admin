@@ -9,6 +9,7 @@ import { VerificationModule } from '../modules/auth/verification/verification.mo
 import { MailModule } from '../modules/libs/mail/mail.module'
 import { LocalesModule } from '../modules/libs/locales/locales.module'
 import { SessionModule } from '../modules/auth/session/session.module'
+import { PasswordRecoveryModule } from '../modules/auth/password-recovery/password-recovery.module'
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SessionModule } from '../modules/auth/session/session.module'
     AccountModule,
     LocalesModule,
     SessionModule,
+    PasswordRecoveryModule,
   ],
 })
 export class CoreModule {}

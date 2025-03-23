@@ -38,8 +38,7 @@ export class SessionService {
   public async findByUser(request: Request) {
     const userId = request.session.userId
 
-    if (!userId)
-      throw new NotFoundException('Пользователь не обнаружен в сессии')
+    if (!userId) throw new NotFoundException('userNotFoundInSession')
 
     const keys = await this.redisService.keys('*')
     const userSessions = []
@@ -93,19 +92,15 @@ export class SessionService {
       },
     })
 
-    if (!user) throw new NotFoundException('Пользователь не найден')
+    if (!user) throw new NotFoundException('userNotFound')
 
     const isValidPassword = await verify(user.password, password)
 
-    if (!isValidPassword) throw new UnauthorizedException('Неверный пароль')
+    if (!isValidPassword)
+      throw new UnauthorizedException('loginOrPasswordIncorrect')
 
-    if (!user.isEmailVerified) {
-      await this.verificationService.sendVerificationToken(user)
-
-      throw new BadRequestException(
-        'Аккаунт не верефицирован. Пожалуйста, провертье свою почту для подтверждения',
-      )
-    }
+    if (!user.isEmailVerified)
+      throw new BadRequestException('accountIsNotConfirmed')
 
     const metadata = getSessionMetadata(request, userAgent)
 
@@ -158,6 +153,8 @@ export class SessionService {
   }
 
   public async logout(request: Request) {
+    request.res.clearCookie('refreshToken')
+
     return destroySession(request, this.configService)
   }
 
@@ -171,7 +168,7 @@ export class SessionService {
 
   public async remove(request: Request, id: string) {
     if (request.session.id === id)
-      throw new ConflictException('Текущую сессию удалить нельзя')
+      throw new ConflictException('currentSessionCantRemove')
 
     const readSessionFolder =
       this.configService.getOrThrow<string>('SESSION_FOLDER')

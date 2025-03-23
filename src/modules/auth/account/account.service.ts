@@ -1,9 +1,14 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { hash } from 'argon2'
 import { UserModel } from '../../../core/models'
 import { CreateUserInput } from './input/create-user.input'
 import { InjectModel } from '@nestjs/sequelize'
 import { VerificationService } from '../verification/verification.service'
+import { Op } from 'sequelize'
 
 @Injectable()
 export class AccountService {
@@ -18,6 +23,23 @@ export class AccountService {
         id,
       },
     })
+  }
+
+  public async resendVerificationToken(login: string) {
+    const user = await this.userModel.findOne({
+      where: {
+        [Op.or]: [{ username: login }, { email: login }],
+      },
+    })
+
+    if (!user) throw new NotFoundException('userWithEmailNotFound')
+
+    if (user.isEmailVerified)
+      throw new ConflictException('emailHasAlreadyConfirmed')
+
+    await this.verificationService.sendVerificationToken(user)
+
+    return true
   }
 
   public async create(input: CreateUserInput) {

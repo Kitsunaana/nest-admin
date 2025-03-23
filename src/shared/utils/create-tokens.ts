@@ -2,9 +2,9 @@ import { jwt } from './jwt.util'
 import { TokenModel, TokenType } from '../../core/models'
 import { generateToken } from './generate-token.util'
 
-// export const REFRESH_TOKEN_EXPIRY = 30 * 24 * 60 * 60 * 1000
-export const REFRESH_TOKEN_EXPIRY = 20 * 1000
-export const ACCESS_TOKEN_EXPIRY = 10
+export const REFRESH_TOKEN_EXPIRY = 30 * 24 * 60 * 60 * 1000
+// export const REFRESH_TOKEN_EXPIRY = 20 * 1000
+export const ACCESS_TOKEN_EXPIRY = 60
 
 export const createTokens = async (
   tokenModel: typeof TokenModel,

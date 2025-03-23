@@ -1,8 +1,8 @@
 import { VerificationService } from './verification.service'
-import { Body, Controller, Post, Req } from '@nestjs/common'
+import { Body, Controller, Post, Req, Res } from '@nestjs/common'
 import { VerificationInput } from './inputs/verification.input'
 import { UserAgent } from '../../../shared/decorators'
-import { Request } from 'express'
+import { Request, Response } from 'express'
 
 @Controller('verification')
 export class VerificationController {
@@ -13,9 +13,10 @@ export class VerificationController {
   @Post()
   public async verify(
     @Req() request: Request,
+    @Res() response: Response,
     @Body() input: VerificationInput,
     @UserAgent() userAgent: string,
   ) {
-    return this.verificationService.verify(request, input, userAgent)
+    return this.verificationService.verify(request, response, input, userAgent)
   }
 }

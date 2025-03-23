@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import { MailService } from '../../libs/mail/mail.service'
 import { VerificationInput } from './inputs/verification.input'
 import { InjectModel } from '@nestjs/sequelize'
@@ -13,6 +13,10 @@ import {
   getSessionMetadata,
   saveSession,
 } from '../../../shared/utils'
+import {
+  createTokens,
+  REFRESH_TOKEN_EXPIRY,
+} from '../../../shared/utils/create-tokens'
 
 @Injectable()
 export class VerificationService {
@@ -25,6 +29,7 @@ export class VerificationService {
 
   public async verify(
     request: Request,
+    response: Response,
     input: VerificationInput,
     userAgent: string,
   ) {
@@ -74,7 +79,20 @@ export class VerificationService {
 
     const metadata = getSessionMetadata(request, userAgent)
 
-    return saveSession(request, user, metadata)
+    await saveSession(request, user, metadata)
+
+    const tokens = await createTokens(this.tokenModel, user.id)
+
+    response.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+      expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
+    })
+
+    return response.json({
+      accessToken: tokens.accessToken,
+    })
   }
 
   public async sendVerificationToken(user: UserModel) {

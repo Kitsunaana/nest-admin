@@ -17,6 +17,11 @@ export class AccountController {
     return this.accountService.me(id)
   }
 
+  @Post('/resend-verification-token')
+  async resendVerificationToken(@Body() body: { data: string }) {
+    return this.accountService.resendVerificationToken(body.data)
+  }
+
   @Post()
   async create(
     @Body(new ZodValidationPipe(createUserInputSchema)) input: CreateUserInput,
