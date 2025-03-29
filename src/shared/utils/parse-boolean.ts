@@ -8,5 +8,7 @@ export const parseBoolean = (value: string): boolean => {
     if (lowerValue === 'false') return false
   }
 
-  throw new Error(`Не удалось преобразовать значение "${value}" в логическое значение`)
+  throw new Error(
+    `Не удалось преобразовать значение "${value}" в логическое значение`,
+  )
 }

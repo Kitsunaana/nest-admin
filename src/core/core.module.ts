@@ -10,6 +10,7 @@ import { MailModule } from '../modules/libs/mail/mail.module'
 import { LocalesModule } from '../modules/libs/locales/locales.module'
 import { SessionModule } from '../modules/auth/session/session.module'
 import { PasswordRecoveryModule } from '../modules/auth/password-recovery/password-recovery.module'
+import { TotpModule } from '../modules/auth/totp/totp.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PasswordRecoveryModule } from '../modules/auth/password-recovery/passwo
     LocalesModule,
     SessionModule,
     PasswordRecoveryModule,
+    TotpModule,
   ],
 })
 export class CoreModule {}

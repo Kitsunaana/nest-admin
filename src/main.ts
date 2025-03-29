@@ -4,9 +4,9 @@ import * as cookieParser from 'cookie-parser'
 import * as session from 'express-session'
 import { ConfigService } from '@nestjs/config'
 import { ValidationPipe } from '@nestjs/common'
-import {RedisService} from "./core/redis/redis.service";
-import {ms, parseBoolean, type StringValue} from "./shared/utils";
-import {RedisStore} from "connect-redis";
+import { RedisService } from './core/redis/redis.service'
+import { ms, parseBoolean, type StringValue } from './shared/utils'
+import { RedisStore } from 'connect-redis'
 
 async function bootstrap() {
   const app = await NestFactory.create(CoreModule)
@@ -31,8 +31,12 @@ async function bootstrap() {
       cookie: {
         domain: config.getOrThrow<string>('SESSION_DOMAIN'),
         maxAge: ms(config.getOrThrow<StringValue>('SESSION_MAX_AGE')),
-        httpOnly: parseBoolean(config.getOrThrow<StringValue>('SESSION_HTTP_ONLY')),
-        secure: parseBoolean(config.getOrThrow<StringValue>('SESSION_SECURITY')),
+        httpOnly: parseBoolean(
+          config.getOrThrow<StringValue>('SESSION_HTTP_ONLY'),
+        ),
+        secure: parseBoolean(
+          config.getOrThrow<StringValue>('SESSION_SECURITY'),
+        ),
         sameSite: 'lax',
       },
       store: new RedisStore({

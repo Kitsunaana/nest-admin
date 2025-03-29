@@ -7,8 +7,8 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
-} from 'sequelize-typescript';
-import { UserModel } from './user.model';
+} from 'sequelize-typescript'
+import { UserModel } from './user.model'
 
 export enum NotificationType {
   ENABLE_TWO_FACTOR = 'ENABLE_TWO_FACTOR',
@@ -19,30 +19,30 @@ export class NotificationModel extends Model<NotificationModel> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
-  id: string;
+  id: string
 
   @Column
-  message: string;
+  message: string
 
   @Column(DataType.ENUM(...Object.values(NotificationType)))
-  type: NotificationType;
+  type: NotificationType
 
   @Default(false)
   @Column({ field: 'is_read' })
-  isRead: boolean;
+  isRead: boolean
 
   @ForeignKey(() => UserModel)
   @Column({ field: 'user_id', type: DataType.UUID, allowNull: true })
-  userId: string;
+  userId: string
 
   @BelongsTo(() => UserModel)
-  user: UserModel;
+  user: UserModel
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })
-  createdAt: Date;
+  createdAt: Date
 
   @Default(DataType.NOW)
   @Column({ field: 'updated_at', type: DataType.DATE })
-  updatedAt: Date;
+  updatedAt: Date
 }

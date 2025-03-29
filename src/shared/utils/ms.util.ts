@@ -40,11 +40,16 @@ type Unit =
 
 type UnitAnyCase = Unit | Uppercase<Unit> | Lowercase<Unit>
 
-export type StringValue = `${number}` | `${number}${UnitAnyCase}` | `${number} ${UnitAnyCase}`
+export type StringValue =
+  | `${number}`
+  | `${number}${UnitAnyCase}`
+  | `${number} ${UnitAnyCase}`
 
 export function ms(str: StringValue): number {
   if (typeof str !== 'string' || str.length === 0 || str.length > 100) {
-    throw new Error('Value provided to ms() must be a string with length between 1 and 99.')
+    throw new Error(
+      'Value provided to ms() must be a string with length between 1 and 99.',
+    )
   }
 
   const match =

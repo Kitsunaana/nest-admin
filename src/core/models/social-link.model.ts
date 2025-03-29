@@ -7,37 +7,37 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
-} from 'sequelize-typescript';
-import { UserModel } from './user.model';
+} from 'sequelize-typescript'
+import { UserModel } from './user.model'
 
 @Table({ tableName: 'social_links' })
 export class SocialLinkModel extends Model<SocialLinkModel> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
-  id: string;
+  id: string
 
   @Column
-  title: string;
+  title: string
 
   @Column
-  url: string;
+  url: string
 
   @Column
-  position: number;
+  position: number
 
   @ForeignKey(() => UserModel)
   @Column({ field: 'user_id', type: DataType.UUID, allowNull: true })
-  userId: string;
+  userId: string
 
   @BelongsTo(() => UserModel)
-  user: UserModel;
+  user: UserModel
 
   @Default(DataType.NOW)
   @Column({ field: 'created_at', type: DataType.DATE })
-  createdAt: Date;
+  createdAt: Date
 
   @Default(DataType.NOW)
   @Column({ field: 'updated_at', type: DataType.DATE })
-  updatedAt: Date;
+  updatedAt: Date
 }

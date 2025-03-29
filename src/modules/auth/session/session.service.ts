@@ -23,6 +23,7 @@ import {
   createTokens,
   REFRESH_TOKEN_EXPIRY,
 } from '../../../shared/utils/create-tokens'
+import { TOTP } from 'otpauth'
 
 @Injectable()
 export class SessionService {
@@ -84,7 +85,7 @@ export class SessionService {
     input: LoginInput,
     userAgent: string,
   ) {
-    const { login, password } = input
+    const { login, password, pin } = input
 
     const user = await this.userModel.findOne({
       where: {
@@ -101,6 +102,26 @@ export class SessionService {
 
     if (!user.isEmailVerified)
       throw new BadRequestException('accountIsNotConfirmed')
+
+    if (user.isTotpEnabled) {
+      if (!pin) {
+        throw new BadRequestException('pinRequired')
+      }
+
+      const totp = new TOTP({
+        issuer: 'Kitsunaana',
+        label: user.email,
+        algorithm: 'SHA1',
+        digits: 6,
+        secret: user.totpSecret,
+      })
+
+      const delta = totp.validate({ token: pin })
+
+      if (delta === null) {
+        throw new BadRequestException('incorrectPin')
+      }
+    }
 
     const metadata = getSessionMetadata(request, userAgent)
 

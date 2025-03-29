@@ -18,8 +18,8 @@ export class AccountController {
   }
 
   @Post('/resend-verification-token')
-  async resendVerificationToken(@Body() body: { data: string }) {
-    return this.accountService.resendVerificationToken(body.data)
+  async resendVerificationToken(@Body() body: { login: string }) {
+    return this.accountService.resendVerificationToken(body.login)
   }
 
   @Post()

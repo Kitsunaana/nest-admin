@@ -1,1 +1,1 @@
-export * from "./zod-validation.pip"
+export * from './zod-validation.pip'
