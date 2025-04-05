@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Get, Patch, Post } from '@nestjs/common'
 import {
   CreateUserInput,
   createUserInputSchema,
@@ -6,6 +6,15 @@ import {
 import { AccountService } from './account.service'
 import { ZodValidationPipe } from '../../../shared/pipes'
 import { Authorization, Authorized } from '../../../shared/decorators'
+import { UserModel } from '../../../core/models'
+import {
+  ChangeEmailInput,
+  changeEmailInputSchema,
+} from './input/change-email.input'
+import {
+  ChangePasswordInput,
+  changePasswordInputSchema,
+} from './input/change-password.input'
 
 @Controller('account')
 export class AccountController {
@@ -27,5 +36,25 @@ export class AccountController {
     @Body(new ZodValidationPipe(createUserInputSchema)) input: CreateUserInput,
   ) {
     return this.accountService.create(input)
+  }
+
+  @Authorization()
+  @Patch('/change-email')
+  public async changeEmail(
+    @Authorized() user: UserModel,
+    @Body(new ZodValidationPipe(changeEmailInputSchema))
+    input: ChangeEmailInput,
+  ) {
+    return this.accountService.changeEmail(user, input)
+  }
+
+  @Authorization()
+  @Patch('/change-password')
+  public async changePassword(
+    @Authorized() user: UserModel,
+    @Body(new ZodValidationPipe(changePasswordInputSchema))
+    input: ChangePasswordInput,
+  ) {
+    return this.accountService.changePassword(user, input)
   }
 }
