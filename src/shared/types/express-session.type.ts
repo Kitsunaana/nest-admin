@@ -6,7 +6,6 @@ declare module 'express-session' {
     userId?: string
     createdAt?: Date | string
     metadata: SessionMetadata
-    refreshToken: string
-    test: string
+    key: string
   }
 }

@@ -11,6 +11,7 @@ import { LocalesModule } from '../modules/libs/locales/locales.module'
 import { SessionModule } from '../modules/auth/session/session.module'
 import { PasswordRecoveryModule } from '../modules/auth/password-recovery/password-recovery.module'
 import { TotpModule } from '../modules/auth/totp/totp.module'
+import { DeactivateModule } from '../modules/auth/deactivate/deactivate.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TotpModule } from '../modules/auth/totp/totp.module'
     SessionModule,
     PasswordRecoveryModule,
     TotpModule,
+    DeactivateModule,
   ],
 })
 export class CoreModule {}

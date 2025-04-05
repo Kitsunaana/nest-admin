@@ -9,7 +9,7 @@ export const saveSession = (
   user: UserModel,
   metadata: SessionMetadata,
 ) => {
-  return new Promise<UserModel>((resolve, reject) => {
+  return new Promise<{ user: UserModel }>((resolve, reject) => {
     request.session.createdAt = new Date()
     request.session.userId = user.id
     request.session.metadata = metadata
@@ -19,7 +19,7 @@ export const saveSession = (
         return reject(new InternalServerErrorException('failedSaveSession'))
       }
 
-      return resolve(user)
+      return resolve({ user })
     })
   })
 }

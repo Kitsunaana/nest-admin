@@ -6,6 +6,7 @@ import { HttpService } from '@nestjs/axios'
 import { VerificationTemplate } from './templates/verification.template'
 import { SessionMetadata } from '../../../shared/types'
 import PasswordRecoveryTemplate from './templates/password-recovery.template'
+import { DeactivateTemplate } from './templates/deactivate.template'
 
 @Injectable()
 export class MailService {
@@ -33,6 +34,16 @@ export class MailService {
     )
 
     return this.sendMail(email, 'Сброс пароля', html)
+  }
+
+  public async sendDeactivateToken(
+    email: string,
+    token: string,
+    metadata: SessionMetadata,
+  ) {
+    const html = await render(DeactivateTemplate({ token, metadata }))
+
+    return this.sendMail(email, 'Деактивация аккаунта', html)
   }
 
   private async sendMail(email: string, subject: string, html: string) {

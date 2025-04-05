@@ -33,7 +33,6 @@ export class SessionService {
 
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
-    private readonly verificationService: VerificationService,
   ) {}
 
   public async findByUser(request: Request) {

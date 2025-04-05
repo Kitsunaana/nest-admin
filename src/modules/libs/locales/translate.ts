@@ -60,6 +60,7 @@ export const translate = {
         save: 'Сохранить',
         cancel: 'Отменить',
         clear: 'Очистить форму',
+        close: 'Закрыть',
 
         confirm: {
           close: {
@@ -163,6 +164,38 @@ export const translate = {
       },
       notify: {
         tokenHasExpired: 'Время жизни токена истекло',
+      },
+    },
+
+    account: {
+      title: {
+        edit: 'Просмотр профиля <strong>{{value}}</strong>',
+      },
+      tabs: {
+        profile: 'Профиль',
+        images: 'Изображения',
+        account: 'Аккаунт',
+        notification: 'Уведомления',
+        sessions: 'Сессии',
+      },
+      profile: {
+        image: {
+          change: 'Изменить изображение профиля',
+          description:
+            'Поддерживаемые форматы: JPG, JPEG, PNG, WEBP и GIF, макс. размер 10МБ',
+        },
+        forms: {
+          labels: {
+            username: 'Имя пользователя',
+            displayName: 'Отображаемое имя',
+            description: 'Описание',
+          },
+          helpers: {
+            username: 'Ваше уникальное имя',
+            displayName: 'Отображаемое имя',
+            description: 'Информация о себе',
+          },
+        },
       },
     },
   },

@@ -41,23 +41,19 @@ export class UserModel extends Model<UserModel> {
   @Column({ allowNull: true })
   bio: string
 
-  @Default(false)
-  @Column({ field: 'is_verified' })
+  @Column({ field: 'is_verified', defaultValue: false })
   isVerified: boolean
 
-  @Default(false)
-  @Column({ field: 'is_email_verified' })
+  @Column({ field: 'is_email_verified', defaultValue: false })
   isEmailVerified: boolean
 
-  @Default(false)
-  @Column({ field: 'is_totp_enabled' })
+  @Column({ field: 'is_totp_enabled', defaultValue: false })
   isTotpEnabled: boolean
 
   @Column({ field: 'totp_secret', allowNull: true })
   totpSecret: string
 
-  @Default(false)
-  @Column({ field: 'is_deactivated' })
+  @Column({ field: 'is_deactivated', defaultValue: false })
   isDeactivated: boolean
 
   @Column({ field: 'deactivated_at', type: DataType.DATE, allowNull: true })
