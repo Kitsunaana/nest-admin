@@ -15,15 +15,17 @@ import {
   getSessionMetadata,
 } from '../../../shared/utils'
 import { Request } from 'express'
+import { TelegramService } from '../../libs/telegram/telegram.service'
 
 @Injectable()
 export class DeactivateService {
   public constructor(
-    private readonly configService: ConfigService,
-    private readonly mailService: MailService,
-
     @InjectModel(TokenModel) private readonly tokenModel: typeof TokenModel,
     @InjectModel(UserModel) private readonly userModel: typeof UserModel,
+
+    private readonly telegramService: TelegramService,
+    private readonly configService: ConfigService,
+    private readonly mailService: MailService,
   ) {}
 
   public async deactivate(
@@ -106,6 +108,17 @@ export class DeactivateService {
     })
 
     const metadata = getSessionMetadata(request, userAgent)
+
+    if (
+      deactivateToken.user?.notificationSettings?.telegramNotifications &&
+      deactivateToken.user?.telegramId
+    ) {
+      await this.telegramService.sendDeactivateToken(
+        deactivateToken.user.telegramId,
+        deactivateToken.token,
+        metadata,
+      )
+    }
 
     await this.mailService.sendDeactivateToken(
       user.email,

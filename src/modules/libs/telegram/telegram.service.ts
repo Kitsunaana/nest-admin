@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/sequelize'
 import { TokenModel, TokenType, UserModel } from '../../../core/models'
 import { MESSAGES } from './telegram.message'
 import { BUTTONS } from './telegram.buttons'
+import { type SessionMetadata } from '../../../shared/types'
 
 @Update()
 @Injectable()
@@ -24,6 +25,36 @@ export class TelegramService extends Telegraf {
     this._token = token
   }
 
+  public async sendPasswordResetToken(
+    chatId: string,
+    token: string,
+    metadata: SessionMetadata,
+  ) {
+    await this.telegram.sendMessage(
+      chatId,
+      MESSAGES.resetPassword(token, metadata),
+      { parse_mode: 'HTML' },
+    )
+  }
+
+  public async sendDeactivateToken(
+    chatId: string,
+    token: string,
+    metadata: SessionMetadata,
+  ) {
+    await this.telegram.sendMessage(
+      chatId,
+      MESSAGES.deactivate(token, metadata),
+      { parse_mode: 'HTML' },
+    )
+  }
+
+  public async sendAccountDelete(chatId: string) {
+    await this.telegram.sendMessage(chatId, MESSAGES.accountDeleted, {
+      parse_mode: 'HTML',
+    })
+  }
+
   @Start()
   public async onStart(@Ctx() ctx: any) {
     const chatId = ctx.chat.id.toString()
@@ -37,11 +68,17 @@ export class TelegramService extends Telegraf {
         },
       })
 
-      if (!authToken) return await ctx.reply(MESSAGES.invalidToken)
+      if (!authToken) {
+        await ctx.reply(MESSAGES.invalidToken)
+        return
+      }
 
       const hasExpired = new Date(authToken.expiresIn) < new Date()
 
-      if (hasExpired) return await ctx.reply(MESSAGES.invalidToken)
+      if (hasExpired) {
+        await ctx.reply(MESSAGES.invalidToken)
+        return
+      }
 
       await this.connectTelegram(authToken.userId, chatId)
 

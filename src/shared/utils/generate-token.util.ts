@@ -1,5 +1,10 @@
 import { v4 as uuid4 } from 'uuid'
-import { TokenModel, type TokenType, UserModel } from '../../core/models'
+import {
+  NotificationSettingsModel,
+  TokenModel,
+  type TokenType,
+  UserModel,
+} from '../../core/models'
 
 export const generateToken = async ({
   tokenModel,
@@ -48,7 +53,12 @@ export const generateToken = async ({
   })
 
   return await tokenModel.findOne({
-    include: [UserModel],
+    include: [
+      {
+        model: UserModel,
+        include: [NotificationSettingsModel],
+      },
+    ],
     where: {
       id: newToken.id,
     },

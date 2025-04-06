@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
-import { AvatarModel, UserModel } from '../../core/models'
+import {
+  AvatarModel,
+  NotificationSettingsModel,
+  UserModel,
+} from '../../core/models'
 import { MailService } from '../libs/mail/mail.service'
 import { Cron } from '@nestjs/schedule'
 import { Op } from 'sequelize'
 import { StorageService } from '../libs/storage/storage.service'
+import { TelegramService } from '../libs/telegram/telegram.service'
 
 @Injectable()
 export class CronService {
@@ -14,6 +19,7 @@ export class CronService {
 
     private readonly mailService: MailService,
     private readonly storageService: StorageService,
+    private readonly telegramService: TelegramService,
   ) {}
 
   @Cron('0 0 * * * *')
@@ -22,6 +28,7 @@ export class CronService {
     sevenDaysAgo.setDate(sevenDaysAgo.getDay() - 7)
 
     const deactivatedAccounts = await this.userModel.findAll({
+      include: [NotificationSettingsModel],
       where: {
         isDeactivated: true,
         deactivatedAt: {
@@ -43,6 +50,13 @@ export class CronService {
         await this.storageService.remove(avatar.path)
 
         await avatar.destroy()
+      }
+
+      if (
+        user?.notificationSettings?.telegramNotifications &&
+        user.telegramId
+      ) {
+        await this.telegramService.sendAccountDelete(user.telegramId)
       }
     }
 

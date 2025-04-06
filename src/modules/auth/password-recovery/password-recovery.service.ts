@@ -6,11 +6,17 @@ import {
 import { MailService } from '../../libs/mail/mail.service'
 import { ResetPasswordInput } from './input/reset-password.input'
 import { InjectModel } from '@nestjs/sequelize'
-import { TokenModel, TokenType, UserModel } from '../../../core/models'
+import {
+  NotificationSettingsModel,
+  TokenModel,
+  TokenType,
+  UserModel,
+} from '../../../core/models'
 import { generateToken, getSessionMetadata } from '../../../shared/utils'
 import { Request } from 'express'
 import { NewPasswordInput } from './input/new-password.input'
 import { hash } from 'argon2'
+import { TelegramService } from '../../libs/telegram/telegram.service'
 
 @Injectable()
 export class PasswordRecoveryService {
@@ -19,6 +25,7 @@ export class PasswordRecoveryService {
     @InjectModel(TokenModel) private readonly tokenModel: typeof TokenModel,
 
     private readonly mailService: MailService,
+    private readonly telegramService: TelegramService,
   ) {}
 
   public async resetPassword(
@@ -29,6 +36,7 @@ export class PasswordRecoveryService {
     const { email } = input
 
     const user = await this.userModel.findOne({
+      include: [NotificationSettingsModel],
       where: {
         email,
       },
@@ -46,10 +54,18 @@ export class PasswordRecoveryService {
     const metadata = getSessionMetadata(request, userAgent)
 
     await this.mailService.sendPasswordResetToken(
-      user.email,
+      resetToken.user.email,
       resetToken.token,
       metadata,
     )
+
+    if (user?.notificationSettings?.telegramNotifications && user.telegramId) {
+      await this.telegramService.sendPasswordResetToken(
+        resetToken.user.telegramId,
+        resetToken.token,
+        metadata,
+      )
+    }
 
     return true
   }
