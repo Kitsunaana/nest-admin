@@ -6,6 +6,7 @@ import {
   SocialLinkModel,
   NotificationModel,
   NotificationSettingsModel,
+  AvatarModel,
 } from '../models'
 
 export const getSequelizeConfig = (
@@ -20,6 +21,7 @@ export const getSequelizeConfig = (
   models: [
     UserModel,
     TokenModel,
+    AvatarModel,
     SocialLinkModel,
     NotificationModel,
     NotificationSettingsModel,

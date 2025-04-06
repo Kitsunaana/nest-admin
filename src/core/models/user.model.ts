@@ -12,6 +12,7 @@ import { TokenModel } from './token.model'
 import { SocialLinkModel } from './social-link.model'
 import { NotificationModel } from './notification.model'
 import { NotificationSettingsModel } from './notification-settings.model'
+import { AvatarModel } from './avatar'
 
 @Table({ tableName: 'users' })
 export class UserModel extends Model<UserModel> {
@@ -35,8 +36,8 @@ export class UserModel extends Model<UserModel> {
   @Column({ field: 'display_name' })
   displayName: string
 
-  @Column({ allowNull: true })
-  avatar: string
+  @HasMany(() => AvatarModel)
+  avatars: AvatarModel[]
 
   @Column({ allowNull: true })
   bio: string

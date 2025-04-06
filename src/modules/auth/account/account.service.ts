@@ -22,6 +22,17 @@ export class AccountService {
 
   public async me(id: string) {
     return this.userModel.findOne({
+      attributes: {
+        exclude: [
+          'password',
+          'telegramId',
+          'isTotpEnabled',
+          'isDeactivated',
+          'totpSecret',
+          'createdAt',
+          'updatedAt',
+        ],
+      },
       where: {
         id,
       },

@@ -6,3 +6,4 @@ export { UserModel } from './user.model'
 
 export { NotificationType } from './notification.model'
 export { TokenType } from './token.model'
+export { AvatarModel } from './avatar'

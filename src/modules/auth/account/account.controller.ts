@@ -21,7 +21,7 @@ export class AccountController {
   public constructor(private readonly accountService: AccountService) {}
 
   @Authorization()
-  @Get()
+  @Get('/me')
   public async me(@Authorized('id') id: string) {
     return this.accountService.me(id)
   }

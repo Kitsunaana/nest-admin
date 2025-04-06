@@ -20,7 +20,6 @@ export class TotpController {
     @Authorized() user: UserModel,
     @Body() input: EnableTotpInput,
   ) {
-    console.log(input)
     return this.totpService.enable(user, input)
   }
 

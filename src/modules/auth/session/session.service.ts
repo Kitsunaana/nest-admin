@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common'
 import { RedisService } from '../../../core/redis/redis.service'
 import { ConfigService } from '@nestjs/config'
-import { VerificationService } from '../verification/verification.service'
 import { Request, Response } from 'express'
 import { LoginInput } from './input/login-input'
 import { InjectModel } from '@nestjs/sequelize'
