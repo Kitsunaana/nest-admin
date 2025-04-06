@@ -16,6 +16,7 @@ import { CronModule } from '../modules/cron/cron.module'
 import { StorageModule } from '../modules/libs/storage/storage.module'
 import { ProfileModule } from '../modules/auth/profile/profile.module'
 import { NotificationModule } from '../modules/notification/notification.module'
+import { TelegramModule } from '../modules/libs/telegram/telegram.module'
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { NotificationModule } from '../modules/notification/notification.module'
     CronModule,
     ProfileModule,
     NotificationModule,
+    TelegramModule,
   ],
 })
 export class CoreModule {}
