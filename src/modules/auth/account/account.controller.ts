@@ -39,7 +39,7 @@ export class AccountController {
   }
 
   @Authorization()
-  @Patch('/change-email')
+  @Post('/change-email')
   public async changeEmail(
     @Authorized() user: UserModel,
     @Body(new ZodValidationPipe(changeEmailInputSchema))
@@ -49,7 +49,7 @@ export class AccountController {
   }
 
   @Authorization()
-  @Patch('/change-password')
+  @Post('/change-password')
   public async changePassword(
     @Authorized() user: UserModel,
     @Body(new ZodValidationPipe(changePasswordInputSchema))

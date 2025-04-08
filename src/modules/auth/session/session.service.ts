@@ -130,8 +130,10 @@ export class SessionService {
 
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
+      // secure: false,
+      secure: true,
+      sameSite: 'lax',
+      domain: 'b891-80-64-17-110.ngrok-free.app',
       expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
     })
 

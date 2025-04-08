@@ -1,6 +1,12 @@
 export const translate = {
   en: {},
   ru: {
+    otp: {
+      title: {
+        enableOTP: 'Активация OTP',
+      },
+      secretCode: 'Секретный код: {{value}}',
+    },
     sidebar: {
       clients: 'Клиенты',
       users: 'Пользователи',
@@ -31,6 +37,8 @@ export const translate = {
       },
       forms: {
         validate: {
+          otpDesc:
+            'Введите 6-значный код, предоставленный вашим приложением для аутентификации',
           invalidUUID: 'Не валидный UUID токен',
           required: 'Поле обязательно для заполнения',
           minLength: 'Минимальное количество символов {{value}}',
@@ -61,6 +69,9 @@ export const translate = {
         cancel: 'Отменить',
         clear: 'Очистить форму',
         close: 'Закрыть',
+        changeEmail: 'Сменить почту',
+        changePassword: 'Сменить пароль',
+        confirmText: 'Подтвердить',
 
         confirm: {
           close: {
@@ -168,6 +179,26 @@ export const translate = {
     },
 
     account: {
+      account: {
+        changePasswordTitle: 'Смена пароля',
+        changeEmailTitle: 'Смена электронной почты',
+        forms: {
+          labels: {
+            email: 'Электронная почта',
+            currentPassword: 'Текущий пароль',
+            newPassword: 'Новый пароль',
+          },
+          helpers: {
+            email: 'Ваш новый адрес электронной почты',
+            currentPassword:
+              'Введите свой старый пароль для подтверждения личности',
+            newPassword: 'Ведите ваш новый пароль',
+          },
+        },
+      },
+      notify: {
+        incorrectCurrentPassword: 'Неверный текущий пароль',
+      },
       title: {
         edit: 'Просмотр профиля <strong>{{value}}</strong>',
       },

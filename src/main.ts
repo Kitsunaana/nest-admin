@@ -7,6 +7,8 @@ import { ValidationPipe } from '@nestjs/common'
 import { RedisService } from './core/redis/redis.service'
 import { ms, parseBoolean, type StringValue } from './shared/utils'
 import { RedisStore } from 'connect-redis'
+import * as express from 'express'
+import { join } from 'path'
 
 async function bootstrap() {
   const app = await NestFactory.create(CoreModule)
@@ -21,6 +23,8 @@ async function bootstrap() {
       transform: true,
     }),
   )
+
+  app.use('/uploads', express.static(join(process.cwd(), 'uploads')))
 
   app.use(
     session({
@@ -47,8 +51,9 @@ async function bootstrap() {
   )
 
   app.enableCors({
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
     origin: config.getOrThrow<string>('ALLOWED_ORIGIN'),
-    exposedHeaders: ['set-cookie'],
+    exposedHeaders: ['set-cookie', 'Content-Disposition'],
     credentials: true,
   })
 

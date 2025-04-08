@@ -20,6 +20,15 @@ export class AvatarModel extends Model<AvatarModel> {
   @Column
   path: string
 
+  @Column
+  caption: string
+
+  @Column
+  originalName: string
+
+  @Column({ defaultValue: 0 })
+  order: number
+
   @ForeignKey(() => UserModel)
   @Column({ field: 'user_id', type: DataType.UUID })
   userId: string

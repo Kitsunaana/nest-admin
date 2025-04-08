@@ -1,11 +1,19 @@
-import { BadRequestException, PipeTransform } from '@nestjs/common'
+import {
+  ArgumentMetadata,
+  BadRequestException,
+  PipeTransform,
+} from '@nestjs/common'
 import { validateFileFormat, validateFileSize } from '../utils/file.util'
 
 export class FileValidationPipe implements PipeTransform {
   constructor(private readonly propertyName: string) {}
 
   public async transform(value: any) {
-    if (typeof value === 'object' && this.propertyName in value) {
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      this.propertyName in value
+    ) {
       const images = value[this.propertyName] as Express.Multer.File[]
 
       return images.map((image) => {

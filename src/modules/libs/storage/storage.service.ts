@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import {
   DeleteObjectCommandInput,
+  PutObjectCommand,
   PutObjectCommandInput,
   S3Client,
 } from '@aws-sdk/client-s3'
@@ -42,7 +43,7 @@ export class StorageService {
     const filePath = join(this.uploadDir, key)
     await writeFile(filePath, buffer)
 
-    // await this.client.send(new PutObjectCommand(command))
+    await this.client.send(new PutObjectCommand(command))
   }
 
   public async remove(key: string) {

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Patch,
+  Post,
   UploadedFiles,
   UseInterceptors,
   UsePipes,
@@ -19,26 +20,48 @@ import {
   ChangeProfileInfoInput,
   changeProfileInfoInputSchema,
 } from './inputs/change-profile-info.input'
+import {
+  updateAvatarsInputSchema,
+  type UpdateAvatarsInput,
+} from './inputs/update-avatars.input'
 
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Authorization()
-  @Patch('/change-avatar')
+  @Post('/change-avatar')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'avatars', maxCount: 10 }]))
-  @UsePipes(new FileValidationPipe('avatars'), new JSONParsePipe('data'))
+  @UsePipes(new FileValidationPipe('avatars'))
   public async changeAvatar(
     @UploadedFiles() avatars: Express.Multer.File[],
     @Authorized() user: UserModel,
-    @Body('data') input: any,
   ) {
-    console.log(avatars)
     return this.profileService.changeAvatar(user, avatars)
   }
 
   @Authorization()
-  @Patch('/change-info')
+  @Post('/remove-avatars')
+  public async removeAvatars(
+    @Authorized() user: UserModel,
+    @Body(new ZodValidationPipe(updateAvatarsInputSchema))
+    input: UpdateAvatarsInput,
+  ) {
+    return this.profileService.removeAvatars(user, input)
+  }
+
+  @Authorization()
+  @Post('/change-order-avatars')
+  public async changeOrderAvatars(
+    @Authorized() user: UserModel,
+    @Body(new ZodValidationPipe(updateAvatarsInputSchema))
+    input: UpdateAvatarsInput,
+  ) {
+    return this.profileService.changeOrderAvatars(user, input)
+  }
+
+  @Authorization()
+  @Post('/change-info')
   public async changeInfo(
     @Authorized() user: UserModel,
     @Body(new ZodValidationPipe(changeProfileInfoInputSchema))

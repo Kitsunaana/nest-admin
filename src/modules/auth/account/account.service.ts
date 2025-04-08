@@ -5,38 +5,70 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { hash, verify } from 'argon2'
-import { UserModel } from '../../../core/models'
+import { AvatarModel, UserModel } from '../../../core/models'
 import { CreateUserInput } from './input/create-user.input'
 import { InjectModel } from '@nestjs/sequelize'
 import { VerificationService } from '../verification/verification.service'
 import { Op } from 'sequelize'
 import { ChangeEmailInput } from './input/change-email.input'
 import { ChangePasswordInput } from './input/change-password.input'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class AccountService {
   public constructor(
     @InjectModel(UserModel) private readonly userModel: typeof UserModel,
     private readonly verificationService: VerificationService,
+
+    private readonly configService: ConfigService,
   ) {}
 
   public async me(id: string) {
-    return this.userModel.findOne({
-      attributes: {
-        exclude: [
-          'password',
-          'telegramId',
-          'isTotpEnabled',
-          'isDeactivated',
-          'totpSecret',
-          'createdAt',
-          'updatedAt',
+    return this.userModel
+      .findOne({
+        include: [
+          {
+            model: AvatarModel,
+            attributes: {
+              exclude: ['userId', 'createdAt', 'updatedAt'],
+            },
+          },
         ],
-      },
-      where: {
-        id,
-      },
-    })
+        attributes: {
+          exclude: [
+            'password',
+            'telegramId',
+            'isTotpEnabled',
+            'isDeactivated',
+            'totpSecret',
+            'createdAt',
+            'updatedAt',
+            'deactivatedAt',
+            'isVerified',
+          ],
+        },
+        where: {
+          id,
+        },
+      })
+      .then((data) => {
+        const plaidData = data.get({ plain: true })
+        const domain = this.configService.getOrThrow<string>('APPLICATION_URL')
+
+        return {
+          ...plaidData,
+          avatars: plaidData.avatars
+            .map((avatar) => ({
+              ...avatar,
+              path: `${domain}/uploads${avatar.path}`,
+            }))
+            .sort((a, b) => {
+              if (a.order < b.order) return 1
+              if (a.order > b.order) return -1
+              return 0
+            }),
+        }
+      })
   }
 
   public async resendVerificationToken(login: string) {
@@ -122,5 +154,7 @@ export class AccountService {
         },
       },
     )
+
+    return true
   }
 }

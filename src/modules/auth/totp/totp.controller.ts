@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { TotpService } from './totp.service'
 import { Authorization, Authorized } from '../../../shared/decorators'
 import { UserModel } from '../../../core/models'
@@ -9,13 +9,13 @@ export class TotpController {
   public constructor(private readonly totpService: TotpService) {}
 
   @Authorization()
-  @Get('/generate-totp-secret')
+  @Post('/generate-secret')
   public async generate(@Authorized() user: UserModel) {
     return this.totpService.generate(user)
   }
 
   @Authorization()
-  @Post('/enable-totp')
+  @Post('/enable')
   public async enable(
     @Authorized() user: UserModel,
     @Body() input: EnableTotpInput,
@@ -24,7 +24,7 @@ export class TotpController {
   }
 
   @Authorization()
-  @Post('/disable-totp')
+  @Post('/disable')
   public async disable(@Authorized() user: UserModel) {
     return this.totpService.disable(user)
   }

@@ -44,13 +44,13 @@ export class SessionController {
     return this.sessionService.logout(request)
   }
 
-  @Post('/clear-session')
+  @Post('/clear')
   public async clearSession(@Req() request: Request) {
     return this.sessionService.clearSession(request)
   }
 
   @Authorization()
-  @Post('/remove-session')
+  @Post('/remove')
   public async remove(@Req() request: Request, @Body('id') id: string) {
     return this.sessionService.remove(request, id)
   }
