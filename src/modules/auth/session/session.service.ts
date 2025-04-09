@@ -98,6 +98,9 @@ export class SessionService {
     if (!isValidPassword)
       throw new UnauthorizedException('loginOrPasswordIncorrect')
 
+    if (user.isDeactivated)
+      throw new BadRequestException('loginOrPasswordIncorrect')
+
     if (!user.isEmailVerified)
       throw new BadRequestException('accountIsNotConfirmed')
 
@@ -130,10 +133,8 @@ export class SessionService {
 
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      // secure: false,
-      secure: true,
-      sameSite: 'lax',
-      domain: 'b891-80-64-17-110.ngrok-free.app',
+      secure: false,
+      sameSite: 'strict',
       expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
     })
 
@@ -156,6 +157,10 @@ export class SessionService {
       },
     })
 
+    if (!(await this.findCurrent(request)).userId) {
+      throw new UnauthorizedException('sessionNotFound')
+    }
+
     const createdTokens = await createTokens(
       this.tokenModel,
       storedToken.userId,
@@ -175,6 +180,9 @@ export class SessionService {
 
   public async logout(request: Request) {
     request.res.clearCookie('refreshToken')
+    request.res.clearCookie(
+      this.configService.getOrThrow<string>('SESSION_NAME'),
+    )
 
     return destroySession(request, this.configService)
   }

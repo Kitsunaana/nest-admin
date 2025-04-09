@@ -46,7 +46,7 @@ export class TotpService {
 
     const delta = totp.validate({ token: pin })
 
-    if (delta === null) throw new BadRequestException('Неверный код')
+    if (delta === null) throw new BadRequestException('incorrectPin')
 
     await this.userModel.update(
       {

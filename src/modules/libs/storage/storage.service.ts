@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import {
+  DeleteObjectCommand,
   DeleteObjectCommandInput,
   PutObjectCommand,
   PutObjectCommandInput,
@@ -40,9 +41,6 @@ export class StorageService {
       ContentType: mimetype,
     }
 
-    const filePath = join(this.uploadDir, key)
-    await writeFile(filePath, buffer)
-
     await this.client.send(new PutObjectCommand(command))
   }
 
@@ -52,9 +50,6 @@ export class StorageService {
       Bucket: this.bucket,
     }
 
-    const fullPath = join(this.uploadDir, key)
-    await unlink(fullPath)
-
-    // await this.client.send(new DeleteObjectCommand(command))
+    await this.client.send(new DeleteObjectCommand(command))
   }
 }

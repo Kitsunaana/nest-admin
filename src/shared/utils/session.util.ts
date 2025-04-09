@@ -37,6 +37,7 @@ export const destroySession = (
       }
 
       request.res.clearCookie(configService.getOrThrow<string>('SESSION_NAME'))
+      request.res.clearCookie('refreshToken')
 
       resolve(true)
     })

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { NotificationService } from './notification.service'
 import { Authorization, Authorized } from '../../shared/decorators'
 import { UserModel } from '../../core/models'
@@ -25,7 +25,7 @@ export class NotificationController {
   }
 
   @Authorization()
-  @Patch()
+  @Post()
   public async changeSettings(
     @Authorized() user: UserModel,
     @Body(new ZodValidationPipe(changeNotificationsSettingsInputSchema))

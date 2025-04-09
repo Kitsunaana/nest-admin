@@ -2,7 +2,7 @@ import { v4 as uuid4 } from 'uuid'
 import {
   NotificationSettingsModel,
   TokenModel,
-  type TokenType,
+  TokenType,
   UserModel,
 } from '../../core/models'
 
@@ -36,7 +36,7 @@ export const generateToken = async ({
     },
   })
 
-  if (existingToken) {
+  if (existingToken && existingToken.type !== TokenType.REFRESH_TOKEN) {
     await tokenModel.destroy({
       where: {
         id: existingToken.id,

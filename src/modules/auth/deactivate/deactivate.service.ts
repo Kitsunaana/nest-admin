@@ -47,9 +47,7 @@ export class DeactivateService {
     if (!pin) {
       await this.sendDeactivateToken(request, user, userAgent)
 
-      return {
-        message: 'pinRequired',
-      }
+      throw new BadRequestException('pinRequired')
     }
 
     await this.validateDeactivateToken(request, pin)
@@ -67,11 +65,11 @@ export class DeactivateService {
       },
     })
 
-    if (!existingToken) throw new NotFoundException('Токен не найден')
+    if (!existingToken) throw new NotFoundException('tokenNotFound')
 
     const hasExpired = new Date(existingToken.expiresIn) < new Date()
 
-    if (hasExpired) throw new BadRequestException('Токен истек')
+    if (hasExpired) throw new BadRequestException('tokenExpires')
 
     await this.userModel.update(
       {

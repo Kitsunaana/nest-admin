@@ -18,13 +18,9 @@ export class ProfileService {
   ) {}
 
   public async removeAvatars(user: UserModel, avatars: UpdateAvatarsInput) {
-    const domain = this.configService.getOrThrow<string>('APPLICATION_URL')
-
     for await (const avatar of avatars) {
       if (avatar.deleted) {
-        await this.storageService.remove(
-          avatar.path.split(domain)[1].split('/uploads')[1],
-        )
+        await this.storageService.remove(avatar.path)
 
         await this.avatarModel.destroy({
           where: {
@@ -60,7 +56,7 @@ export class ProfileService {
   public async changeAvatar(user: UserModel, avatars: Express.Multer.File[]) {
     for await (const avatar of avatars) {
       const caption = `${user.username}-${v4()}`
-      const filename = `/avatars/${caption}.webp`
+      const filename = `avatars/${caption}.webp`
 
       await this.storageService.upload(avatar.buffer, filename, 'image/webp')
 

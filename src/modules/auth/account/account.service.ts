@@ -5,7 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { hash, verify } from 'argon2'
-import { AvatarModel, UserModel } from '../../../core/models'
+import {
+  AvatarModel,
+  NotificationSettingsModel,
+  UserModel,
+} from '../../../core/models'
 import { CreateUserInput } from './input/create-user.input'
 import { InjectModel } from '@nestjs/sequelize'
 import { VerificationService } from '../verification/verification.service'
@@ -33,12 +37,17 @@ export class AccountService {
               exclude: ['userId', 'createdAt', 'updatedAt'],
             },
           },
+          {
+            model: NotificationSettingsModel,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'userId'],
+            },
+          },
         ],
         attributes: {
           exclude: [
             'password',
             'telegramId',
-            'isTotpEnabled',
             'isDeactivated',
             'totpSecret',
             'createdAt',
@@ -53,14 +62,20 @@ export class AccountService {
       })
       .then((data) => {
         const plaidData = data.get({ plain: true })
-        const domain = this.configService.getOrThrow<string>('APPLICATION_URL')
+        const endpoint = this.configService.getOrThrow<string>('S3_ENDPOINT')
+        const bucketName =
+          this.configService.getOrThrow<string>('S3_BUCKET_NAME')
 
         return {
           ...plaidData,
+          notificationSettings: plaidData.notificationSettings ?? {
+            telegramNotifications: false,
+            siteNotifications: false,
+          },
           avatars: plaidData.avatars
             .map((avatar) => ({
               ...avatar,
-              path: `${domain}/uploads${avatar.path}`,
+              path: `${endpoint}/${bucketName}/${avatar.path}`,
             }))
             .sort((a, b) => {
               if (a.order < b.order) return 1
