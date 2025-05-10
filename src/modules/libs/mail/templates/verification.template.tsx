@@ -38,7 +38,7 @@ export const VerificationTemplate = ({
             </Text>
             <Link
               href={verificationLink}
-              className="p-2 inline-flex justify-center items-center rounded-md text-sm font-medium text-white bg-[#18B9AE]"
+              className="p-2 inline-flex justify-center items-center rounded-md text-sm font-medium text-white bg-pink-400"
             >
               Подтвердить почту
             </Link>

@@ -202,6 +202,7 @@ export const translate = {
       },
       notify: {
         tokenHasExpired: 'Время жизни токена истекло',
+        tokenNotFound: 'Токен не найден',
       },
     },
 

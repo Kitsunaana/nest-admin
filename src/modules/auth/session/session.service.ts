@@ -23,6 +23,9 @@ import {
   REFRESH_TOKEN_EXPIRY,
 } from '../../../shared/utils/create-tokens'
 import { TOTP } from 'otpauth'
+import { ProviderService } from '../provider/provider.service'
+import { SessionMetadata } from 'src/shared/types';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class SessionService {
@@ -32,7 +35,8 @@ export class SessionService {
 
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
-  ) {}
+    private readonly providerService: ProviderService,
+  ) { }
 
   public async findByUser(request: Request) {
     const userId = request.session.userId
@@ -143,6 +147,61 @@ export class SessionService {
     response.json({
       accessToken,
     })
+  }
+
+  public async extractProfileFromCode(
+    request: Request,
+    provider: string,
+    code: string,
+    metadata: SessionMetadata
+  ) {
+    const providerInstance = this.providerService.findByService(provider)
+    const profile = await providerInstance.findUserByCode(code)
+
+    console.log({ profile })
+
+    const isEmailExist = await this.userModel.findOne({
+      where: {
+        email: profile.email,
+        provider: null
+      }
+    })
+
+    if (isEmailExist) {
+      await isEmailExist.update({
+        provider: profile.provider,
+        isEmailVerified: true,
+      })
+    }
+
+    const account = await this.userModel.findOne({
+      where: {
+        email: profile.email,
+        provider: profile.provider,
+      }
+    })
+
+    if (account) {
+      return saveSession(request, account, metadata)
+    }
+
+    const newAccount = await this.userModel.create({
+      password: "",
+      email: profile.email,
+      isEmailVerified: true,
+      displayName: profile.name,
+      provider: profile.provider,
+      username: profile.email,
+    })
+
+    await this.tokenModel.create({
+      type: TokenType.REFRESH_TOKEN,
+      token: profile.refresh_token,
+      expiresIn: new Date(profile.expires_at * 1000),
+      userId: newAccount.id,
+    })
+
+    return saveSession(request, newAccount, metadata)
   }
 
   public async refreshToken(request: Request, response: Response) {

@@ -17,6 +17,9 @@ import { StorageModule } from '../modules/libs/storage/storage.module'
 import { ProfileModule } from '../modules/auth/profile/profile.module'
 import { NotificationModule } from '../modules/notification/notification.module'
 import { TelegramModule } from '../modules/libs/telegram/telegram.module'
+import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha'
+import { getRecaptchaConfig } from './configs/recaptcha.config'
+
 
 @Module({
   imports: [
@@ -29,6 +32,11 @@ import { TelegramModule } from '../modules/libs/telegram/telegram.module'
       inject: [ConfigService],
       useFactory: getSequelizeConfig,
     }),
+    // GoogleRecaptchaModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: getRecaptchaConfig,
+    //   inject: [ConfigService],
+    // }),
     MailModule,
     RedisModule,
     VerificationModule,
@@ -45,4 +53,4 @@ import { TelegramModule } from '../modules/libs/telegram/telegram.module'
     TelegramModule,
   ],
 })
-export class CoreModule {}
+export class CoreModule { }

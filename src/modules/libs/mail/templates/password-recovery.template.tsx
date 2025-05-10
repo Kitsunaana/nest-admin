@@ -41,14 +41,14 @@ const PasswordRecoveryTemplate = ({
             </Text>
             <Link
               href={resetLink}
-              className="p-2 inline-flex justify-center items-center rounded-md text-sm font-medium text-white bg-[#18B9AE]"
+              className="p-2 inline-flex justify-center items-center rounded-md text-sm font-medium text-white bg-pink-400"
             >
               Сбросить пароль
             </Link>
           </Section>
 
           <Section className="bg-gray-100 rounded-lg p-6 mb-6">
-            <Heading className="text-xl font-semibold text-[#18B9AE]">
+            <Heading className="text-xl font-semibold text-pink-400">
               Информация о запросе:
             </Heading>
 

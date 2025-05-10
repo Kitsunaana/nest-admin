@@ -21,6 +21,9 @@ export class UserModel extends Model<UserModel> {
   @Column(DataType.UUID)
   id: string
 
+  @Column({ allowNull: true, defaultValue: null })
+  provider?: string | null
+
   @Column({ unique: true })
   email: string
 
